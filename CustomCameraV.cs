@@ -9,6 +9,7 @@ using System.Threading;
 using System.Globalization;
 using CustomCameraVScript;
 using Control = CitizenFX.Core.Control;
+using System.Threading.Tasks;
 
 namespace CustomCameraVScript
 {
@@ -132,10 +133,7 @@ namespace CustomCameraVScript
 
         public CustomCameraV()
         {
-            this.Tick += OnTick;
-            this.KeyUp += onKeyUp;
-            this.KeyDown += onKeyDown;
-            this.Aborted += onAborted;
+            Tick += OnTick;
 
             // Always use invariant culture (dot decimal separator)
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -170,13 +168,10 @@ namespace CustomCameraVScript
             generalMovementSpeed = Mathr.Clamp(generalMovementSpeed, 0.1f, 10f);
         }
 
-        private void onAborted(object sender, EventArgs e)
+        public async Task OnTick()
         {
-            ExitCustomCameraView();
-        }
+            await Task.FromResult(0);
 
-        public void OnTick(object sender, EventArgs e)
-        {
             if (init && customCamEnabled)
             {
                 init = false;
@@ -658,35 +653,10 @@ namespace CustomCameraVScript
             return longitude;
         }
 
-
-        private void onKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == toggleDebugKey)
-            {
-                showDebugStats = !showDebugStats;
-            }
-
-            if (e.KeyCode == toggleEnabledKey)
-            {
-                customCamEnabled = !customCamEnabled;
-            }
-        }
-
-        private void onKeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void ExitCustomCameraView()
         {
             World.RenderingCamera = null;
             camSet = false;
-        }
-
-        protected override void Dispose(bool A_0)
-        {
-            World.RenderingCamera = null;
-            base.Dispose(A_0);
         }
     }
 
