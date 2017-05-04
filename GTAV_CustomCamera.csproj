@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="CustomCameraV.cs" />
     <Compile Include="Easing\Easing.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transform\Transform.cs" />
     <Compile Include="Tween\Ease.cs" />

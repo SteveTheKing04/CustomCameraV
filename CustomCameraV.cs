@@ -47,7 +47,7 @@ namespace CustomCameraVScript
 
         private Vector3 wantedPosVelocity = new Vector3();
 
-        private DebugPanel dbgPanel;
+        //private DebugPanel dbgPanel;
         private Tweener tweener = new Tweener();
         private int oldVehHash = -1;
         private bool isSuitableForCam = false;
@@ -207,7 +207,7 @@ namespace CustomCameraVScript
                         ResetMouseLookTween();
                         ResetSmoothValues(veh);
                         SetupCamera(player, veh);
-                        setupDebugStats(veh);
+                        //setupDebugStats(veh);
 
                         if (firstVeh && notifyModEnabled)
                         {
@@ -218,7 +218,7 @@ namespace CustomCameraVScript
                     {
                         if (showDebugStats)
                         {
-                            drawDebugStats(veh);
+                            //drawDebugStats(veh);
                         }
                     }
                     Game.DisableControlThisFrame(2, Control.NextCamera);
@@ -266,7 +266,7 @@ namespace CustomCameraVScript
             tweener.Update(getDeltaTime());
         }
 
-        private void setupDebugStats(Vehicle veh)
+        /*private void setupDebugStats(Vehicle veh)
         {
             dbgPanel = new DebugPanel();
 
@@ -300,7 +300,7 @@ namespace CustomCameraVScript
         private void drawDebugStats(Vehicle veh)
         {
             dbgPanel.Draw();
-        }
+        }*/
 
         private float getDeltaTime()
         {
