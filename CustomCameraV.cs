@@ -320,8 +320,8 @@ namespace CustomCameraVScript
             smoothVelocitySmDamp = Vector3.Zero;
             tempSmoothVsVl = 0.025f;
 
-            currentPos = veh.Position - (Vector3.WorldUp * (heightOffset + currentVehicleHeight));
-            wantedPosVelocity = veh.Position - (Vector3.WorldUp * (heightOffset + currentVehicleHeight));
+            currentPos = veh.Position - (Extensions.WorldUp * (heightOffset + currentVehicleHeight));
+            wantedPosVelocity = veh.Position - (Extensions.WorldUp * (heightOffset + currentVehicleHeight));
             currentRotation = veh.Quaternion;
         }
 
@@ -343,7 +343,7 @@ namespace CustomCameraVScript
             isCycleOrByke = veh.ClassType == VehicleClass.Cycles || veh.ClassType == VehicleClass.Motorcycles;
             isSuitableForCam = isVehicleSuitableForCustomCamera(veh);
 
-            fullHeightOffset = (Vector3.WorldUp * (heightOffset + currentVehicleHeight));
+            fullHeightOffset = (Extensions.WorldUp * (heightOffset + currentVehicleHeight));
         }
 
         private void updateMouseAndGamepadInput(Vehicle veh)
@@ -421,13 +421,13 @@ namespace CustomCameraVScript
 
             //currentPos = veh.Position - (veh.ForwardVector * (currentVehicleLongitude + distanceOffset)) + (Vector3.WorldUp * (heightOffset + currentVehicleHeight));
             //currentRotation = veh.Quaternion;
-            smoothVelocity = veh.Velocity.Normalized;
+            smoothVelocity = Vector3.Normalize(veh.Velocity);
             wantedPosVelocity = veh.Rotation;
 
             mainCamera.IsActive = true;
             World.RenderingCamera = mainCamera;
 
-            rearCamCurrentTransform = new Transform(veh.Position + (veh.Quaternion * Vector3.RelativeBack * (fullLongitudeOffset + currentDistanceIncrement)), veh.Rotation);
+            rearCamCurrentTransform = new Transform(veh.Position + (Vector3.Transform(Extensions.RelativeBack, veh.Quaternion) * (fullLongitudeOffset + currentDistanceIncrement)), veh.Rotation);
         }
 
         private Transform UpdateCameraMouse(Ped player, Vehicle veh)
@@ -441,7 +441,7 @@ namespace CustomCameraVScript
             Transform fixedDistanceTr = new Transform(transform.position, Quaternion.Identity);
             fixedDistanceTr.PointAt(pointAt);
 
-            fixedDistanceTr.position = veh.Position /*+ (fullHeightOffset / 3f)*/ + (fixedDistanceTr.quaternion * Vector3.RelativeBack * (fullLongitudeOffset + currentDistanceIncrement));
+            fixedDistanceTr.position = veh.Position /*+ (fullHeightOffset / 3f)*/ + (Vector3.Transform(Extensions.RelativeBack, fixedDistanceTr.quaternion) * (fullLongitudeOffset + currentDistanceIncrement));
 
             transform.position = fixedDistanceTr.position;
 
@@ -498,13 +498,13 @@ namespace CustomCameraVScript
             var fixedVsVelocity = getFixedVsVelocityFactor(veh, speedCoeff);
 
             // Compute camera position rear the vechicle
-            var wantedPosFixed = wantedPos - veh.Quaternion * Vector3.RelativeFront * fullLongitudeOffset;
+            var wantedPosFixed = wantedPos - Vector3.Transform(Extensions.RelativeFront, veh.Quaternion) * fullLongitudeOffset;
 
             // smooth out velocity
-            smoothVelocity = Mathr.Vector3SmoothDamp(smoothVelocity, veh.Velocity.Normalized, ref smoothVelocitySmDamp, generalMovementSpeed, 9999999f, responsivenessMultiplier * getDeltaTime());
+            smoothVelocity = Mathr.Vector3SmoothDamp(smoothVelocity, Vector3.Normalize(veh.Velocity), ref smoothVelocitySmDamp, generalMovementSpeed, 9999999f, responsivenessMultiplier * getDeltaTime());
             // Compute camera postition rear the direction of the vehcle
             if(speedCoeff >= stoppedSpeed)
-                wantedPosVelocity = wantedPos + Mathr.QuaternionLookRotation(smoothVelocity) * Vector3.RelativeBottom * fullLongitudeOffset;
+                wantedPosVelocity = wantedPos + Vector3.Transform(Extensions.RelativeBottom, Mathr.QuaternionLookRotation(smoothVelocity)) * fullLongitudeOffset;
 
             // Smooth factor between two above cam positions
             smoothFixedVsVelocity = Mathr.Lerp(smoothFixedVsVelocity, fixedVsVelocity, (fixedVsVelocitySpeed) * getDeltaTime());
@@ -522,7 +522,7 @@ namespace CustomCameraVScript
 
             //rearCamCurrentTransform.position = currentPos;
             mainCamera.PointAt(pointAt);
-            look = Quaternion.Euler(mainCamera.Rotation);
+            look = Extensions.Euler(mainCamera.Rotation);
 
             // Rotate the camera towards the velocity vector.
             var finalCamRotationSpeed = Mathr.Lerp(cameraRotationSpeedLowSpeed, cameraRotationSpeed, ((speedCoeff / lowSpeedLimit) * 1.32f) * getDeltaTime() * 51f);
@@ -544,7 +544,7 @@ namespace CustomCameraVScript
             
 
             // Fix stuttering (mantain camera distance fixed in local space)
-            Transform fixedDistanceTr = new Transform(currentPos + fullHeightOffset + (Vector3.WorldUp * extraCamHeight), Quaternion.Identity);
+            Transform fixedDistanceTr = new Transform(currentPos + fullHeightOffset + (Extensions.WorldUp * extraCamHeight), Quaternion.Identity);
             fixedDistanceTr.PointAt(pointAt);
 
             Quaternion rotInitial = fixedDistanceTr.quaternion;
@@ -561,7 +561,7 @@ namespace CustomCameraVScript
             //fixedDistanceTr.position = veh.Position + fullHeightOffset + (finalRot * Vector3.RelativeBack * (fullLongitudeOffset + currentDistanceIncrement));
             // End Autoalignment
 
-            fixedDistanceTr.position = veh.Position + fullHeightOffset + (Vector3.WorldUp * extraCamHeight) + (rotInitial * Vector3.RelativeBack * (fullLongitudeOffset + currentDistanceIncrement));
+            fixedDistanceTr.position = veh.Position + fullHeightOffset + (Extensions.WorldUp * extraCamHeight) + (Vector3.Transform(Extensions.RelativeBack, rotInitial) * (fullLongitudeOffset + currentDistanceIncrement));
 
             //fixedDistanceTr.position = fixedDistanceTr.position + fullHeightOffset;
 
@@ -797,9 +797,7 @@ namespace CustomCameraVScript
 
         public static Quaternion QuaternionLookRotation(Vector3 forward)
         {
-            Vector3 up = Vector3.WorldUp;
-
-            return QuaternionLookRotation(forward, up);
+            return QuaternionLookRotation(forward, Extensions.WorldUp);
         }
 
         // Cheaper than Slerp
@@ -919,7 +917,7 @@ namespace CustomCameraVScript
         public static Vector3 Vector3ClampMagnitude(Vector3 vector, float maxLength)
         {
             if ((double)Vector3SqrMagnitude(vector) > (double)maxLength * (double)maxLength)
-                return vector.Normalized * maxLength;
+                return Vector3.Normalize(vector) * maxLength;
             return vector;
         }
 
@@ -938,11 +936,11 @@ namespace CustomCameraVScript
         {
             Vector3 forwardVector = Vector3.Normalize(destPoint - sourcePoint);
 
-            float dot = Vector3.Dot(Vector3.RelativeFront, forwardVector);
+            float dot = Vector3.Dot(Extensions.RelativeFront, forwardVector);
 
             if (Math.Abs(dot - (-1.0f)) < 0.000001f)
             {
-                return new Quaternion(Vector3.WorldUp.X, Vector3.WorldUp.Y, Vector3.WorldUp.Z, 3.1415926535897932f);
+                return new Quaternion(Extensions.WorldUp.X, Extensions.WorldUp.Y, Extensions.WorldUp.Z, 3.1415926535897932f);
             }
             if (Math.Abs(dot - (1.0f)) < 0.000001f)
             {
@@ -950,7 +948,7 @@ namespace CustomCameraVScript
             }
 
             float rotAngle = (float)Math.Acos(dot);
-            Vector3 rotAxis = Vector3.Cross(Vector3.RelativeFront, forwardVector);
+            Vector3 rotAxis = Vector3.Cross(Extensions.RelativeFront, forwardVector);
             rotAxis = Vector3.Normalize(rotAxis);
             return CreateFromAxisAngle(rotAxis, rotAngle);
         }

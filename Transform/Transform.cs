@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CustomCameraVScript;
+using CitizenFX.Core;
 
 namespace CustomCameraVScript
 {
@@ -18,7 +19,7 @@ namespace CustomCameraVScript
         {
             this.position = position;
             this.rotation = eulerAngles;
-            this.quaternion = Quaternion.Euler(eulerAngles);
+            this.quaternion = Extensions.Euler(eulerAngles);
         }
 
         public Transform(Vector3 position, Quaternion rotation)
