@@ -802,9 +802,11 @@ namespace CustomCameraVScript
         }
 
         // Cheaper than Slerp
-        public static Quaternion QuaternionNLerp(Quaternion start, Quaternion end, float ammount)
+        public static Quaternion QuaternionNLerp(Quaternion start, Quaternion end, float amount)
         {
-            return QuaternionFromEuler(Vector3.Lerp(start.ToEulerAngles(), end.ToEulerAngles(), Mathr.Clamp01(ammount)).Normalized);
+            Vector3 tmp = Vector3.Lerp(start.ToEulerAngles(), end.ToEulerAngles(), Clamp01(amount));
+            tmp.Normalize();
+            return QuaternionFromEuler(tmp);
         }
 
         public static float SmoothStep(float from, float to, float t)
