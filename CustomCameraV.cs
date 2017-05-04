@@ -211,7 +211,6 @@ namespace CustomCameraVScript
 
                         if (firstVeh && notifyModEnabled)
                         {
-                            UI.Notify("CustomCameraV Enabled (Press "+ toggleEnabledKey.ToString() +" to disable)");
                             firstVeh = false;
                         }
                     }
