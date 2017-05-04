@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
-using System.Windows.Forms;
 using Glide;
 using System.Threading;
 using System.Globalization;
@@ -119,9 +118,6 @@ namespace CustomCameraVScript
         public float accelerationCamDistanceMultiplier = 2.38f;
 
         public bool useEasingForCamDistance = true;
-
-        public Keys toggleEnabledKey = Keys.NumPad1;
-        public Keys toggleDebugKey = Keys.NumPad2;
 
         public float vehDummyOffset = 0.11f;
         public float vehDummyOffsetHighSpeed = -0.05f;
