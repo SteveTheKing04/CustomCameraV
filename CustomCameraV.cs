@@ -8,6 +8,7 @@ using Glide;
 using System.Threading;
 using System.Globalization;
 using CustomCameraVScript;
+using Control = CitizenFX.Core.Control;
 
 namespace CustomCameraVScript
 {
@@ -182,7 +183,7 @@ namespace CustomCameraVScript
             }
 
             var player = Game.Player.Character;
-            if (player.IsInVehicle() && customCamEnabled && !Game.Player.IsAiming && !Game.IsControlPressed(2, GTA.Control.VehicleLookBehind))
+            if (player.IsInVehicle() && customCamEnabled && !Game.Player.IsAiming && !Game.IsControlPressed(2, Control.VehicleLookBehind))
             {
                 Vehicle veh = player.CurrentVehicle;
                 var NewVehHash = veh.GetHashCode();
@@ -226,7 +227,7 @@ namespace CustomCameraVScript
                             drawDebugStats(veh);
                         }
                     }
-                    Game.DisableControlThisFrame(2, GTA.Control.NextCamera);
+                    Game.DisableControlThisFrame(2, Control.NextCamera);
 
                     isRearCameraOnly = smoothIsMouseLooking < 0.005f;
                     isMouseCameraOnly = smoothIsMouseLooking > 0.995f;
@@ -293,7 +294,7 @@ namespace CustomCameraVScript
             dbgPanel.watchedVariables.Add("generalMovementSpeed", () => { return generalMovementSpeed; });
             dbgPanel.watchedVariables.Add("Delta (custom impl)", () => { return getDeltaTime(); });
             dbgPanel.watchedVariables.Add("TIMESTEP", () => { return Function.Call<float>(Hash.TIMESTEP); });
-            dbgPanel.watchedVariables.Add("Interval", () => { return Interval; });
+            //dbgPanel.watchedVariables.Add("Interval", () => { return Interval; }); wtf dude how is this even supposed to work
             dbgPanel.watchedVariables.Add("veh.Position", () => { return veh.Position; });
             dbgPanel.watchedVariables.Add("veh.Speed / maxHighSpeed", () => { return veh.Speed / maxHighSpeed; });
             dbgPanel.watchedVariables.Add("isMouseCameraOnly", () => { return isMouseCameraOnly; });
@@ -358,10 +359,10 @@ namespace CustomCameraVScript
             oldMousePosition = currentMousePosition;
 
             var isGamepadLooking = 
-                Game.IsControlPressed(2, GTA.Control.LookLeftOnly)  ||
-                Game.IsControlPressed(2, GTA.Control.LookRightOnly) ||
-                Game.IsControlPressed(2, GTA.Control.LookUpOnly)    ||
-                Game.IsControlPressed(2, GTA.Control.LookDownOnly)
+                Game.IsControlPressed(2, Control.LookLeftOnly)  ||
+                Game.IsControlPressed(2, Control.LookRightOnly) ||
+                Game.IsControlPressed(2, Control.LookUpOnly)    ||
+                Game.IsControlPressed(2, Control.LookDownOnly)
                 ;
 
             if (xMovement > 2.0f || yMovement > 2.0f || isGamepadLooking)
@@ -973,7 +974,7 @@ namespace CustomCameraVScript
         {
             get
             {
-                return (int)(((GTA.Native.Function.Call<int>(GTA.Native.Hash.GET_CONTROL_VALUE, 0, 239) - 127) / 127.0f) * UI.WIDTH);
+                return (int)(((Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, 239) - 127) / 127.0f) * CitizenFX.Core.UI.Screen.Width);
             }
         }
 
@@ -981,7 +982,7 @@ namespace CustomCameraVScript
         {
             get
             {
-                return (int)(((GTA.Native.Function.Call<int>(GTA.Native.Hash.GET_CONTROL_VALUE, 0, 240) - 127) / 127.0f) * UI.HEIGHT);
+                return (int)(((Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, 240) - 127) / 127.0f) * CitizenFX.Core.UI.Screen.Height);
             }
         }
     }
