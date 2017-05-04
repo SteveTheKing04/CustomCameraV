@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GTA;
-using GTA.Native;
-using GTA.Math;
+using CitizenFX.Core;
+using CitizenFX.Core.Native;
 using System.Windows.Forms;
 using Glide;
 using System.Threading;
@@ -12,7 +11,7 @@ using CustomCameraVScript;
 
 namespace CustomCameraVScript
 {
-    public class CustomCameraV : Script
+    public class CustomCameraV : BaseScript
     {
         private Camera mainCamera;
         private bool init = true;
