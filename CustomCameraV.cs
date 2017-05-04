@@ -144,7 +144,7 @@ namespace CustomCameraVScript
         private void LoadSettings()
         {
             // general
-            customCamEnabled = Settings.GetValue<bool>("general", "enabled", customCamEnabled);
+            /*customCamEnabled = Settings.GetValue<bool>("general", "enabled", customCamEnabled);
             distanceOffset = Settings.GetValue<float>("general", "distanceOffset", distanceOffset);
             heightOffset = Settings.GetValue<float>("general", "heightOffset", heightOffset);
             fov = Settings.GetValue<float>("general", "fov", fov);
@@ -162,7 +162,7 @@ namespace CustomCameraVScript
 
             //key-mappings
             toggleEnabledKey = Settings.GetValue<Keys>("keymappings", "toggleEnabledKey", toggleEnabledKey);
-            toggleDebugKey = Settings.GetValue<Keys>("keymappings", "toggleDebugKey", toggleDebugKey);
+            toggleDebugKey = Settings.GetValue<Keys>("keymappings", "toggleDebugKey", toggleDebugKey);*/
 
             // Sanitize
             generalMovementSpeed = Mathr.Clamp(generalMovementSpeed, 0.1f, 10f);
