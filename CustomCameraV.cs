@@ -359,6 +359,13 @@ namespace CustomCameraVScript
                 Game.IsControlPressed(2, Control.LookDownOnly)
                 ;
 
+
+            if (!Function.Call<bool>(Hash._IS_INPUT_DISABLED, 0))
+            {
+                xMovement = 0.0f;
+                yMovement = 0.0f;
+            }
+
             if (xMovement > 2.0f || yMovement > 2.0f || isGamepadLooking)
             {
                 isMouseMoving = true;
